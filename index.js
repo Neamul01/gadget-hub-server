@@ -40,11 +40,11 @@ async function run() {
         // decrease number by one 
         app.post('/items/:id', async (req, res) => {
             const quantity = req.query.newQuantity;
-            const updateQuantity = Number(Number(quantity) - 1);
+            // const updateQuantity = Number(Number(quantity) - 1);
             const id = req.params.id;
             const newQuantity = {
                 $set: {
-                    quantity: updateQuantity
+                    quantity: Number(quantity)
                 }
             }
             console.log(newQuantity)
