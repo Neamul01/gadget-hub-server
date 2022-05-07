@@ -32,9 +32,25 @@ async function run() {
         app.get('/items/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            console.log(id)
+            // console.log(id)
             const item = await itemCollection.findOne(query);
             res.send(item)
+        })
+
+        app.post('/items/:id', async (req, res) => {
+            const quantity = req.query.newQuantity;
+            const updateQuantity = Number(quantity) - 1;
+            const id = req.params.id;
+            const newQuantity = {
+                $set: {
+                    quantity: updateQuantity
+                }
+            }
+            console.log(newQuantity)
+            const filter = { _id: ObjectId(id) };
+            const oprions = { upsert: true };
+            const result = await itemCollection.updateOne(filter, newQuantity, oprions);
+            res.send(result)
         })
     }
     finally {
