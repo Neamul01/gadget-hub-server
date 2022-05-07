@@ -37,6 +37,7 @@ async function run() {
             res.send(item)
         })
 
+        // decrease number by one 
         app.post('/items/:id', async (req, res) => {
             const quantity = req.query.newQuantity;
             const updateQuantity = Number(Number(quantity) - 1);
@@ -59,6 +60,16 @@ async function run() {
             console.log(req.body)
             const result = await itemCollection.insertOne(newItem);
             res.send(result)
+        })
+
+        // get items by user 
+        app.get('/userItem', async (req, res) => {
+            const email = req.query.email;
+            console.log(email)
+            const query = { email: email };
+            const cursor = itemCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
         })
     }
     finally {
