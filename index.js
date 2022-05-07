@@ -64,11 +64,21 @@ async function run() {
 
         // get items by user 
         app.get('/userItem', async (req, res) => {
-            const email = req.query.email;
-            console.log(email)
-            const query = { email: email };
+            const userEmail = req.query.email;
+            console.log(userEmail)
+            const query = { email: userEmail };
             const cursor = itemCollection.find(query);
             const result = await cursor.toArray();
+            console.log(result)
+            res.send(result)
+        })
+
+        // delete a item 
+        app.delete('/item', async (req, res) => {
+            const id = req.query.id;
+            console.log(id)
+            const query = { _id: ObjectId(id) };
+            const result = await itemCollection.deleteOne(query);
             res.send(result);
         })
     }
