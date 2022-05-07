@@ -39,7 +39,7 @@ async function run() {
 
         app.post('/items/:id', async (req, res) => {
             const quantity = req.query.newQuantity;
-            const updateQuantity = Number(quantity) - 1;
+            const updateQuantity = Number(Number(quantity) - 1);
             const id = req.params.id;
             const newQuantity = {
                 $set: {
@@ -50,6 +50,14 @@ async function run() {
             const filter = { _id: ObjectId(id) };
             const oprions = { upsert: true };
             const result = await itemCollection.updateOne(filter, newQuantity, oprions);
+            res.send(result)
+        })
+
+        // get new item
+        app.post('/items', async (req, res) => {
+            const newItem = req.body;
+            console.log(req.body)
+            const result = await itemCollection.insertOne(newItem);
             res.send(result)
         })
     }
