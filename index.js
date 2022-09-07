@@ -3,8 +3,9 @@ const cors = require('cors');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const port = process.env.PORT || 5000;
+const varifyJWT = require('./authorizarion/varifyJWT')
 
+const port = process.env.PORT || 5000;
 const app = express();
 
 //midleware
@@ -26,7 +27,6 @@ async function run() {
         app.put('/user/:email', async (req, res) => {
             const email = req.params;
             const user = req.body;
-            console.log('user', user, 'email', email)
             const filter = { email: email };
             const options = { upsert: true };
             const updatedDoc = {
