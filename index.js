@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
@@ -19,6 +20,22 @@ async function run() {
     try {
         await client.connect();
         const itemCollection = client.db('GadgetHub').collection('items');
+        const userCollection = client.db('GadgetHub').collection('users');
+
+        //save users
+        app.put('/user/:email', async (req, res) => {
+            const email = req.params;
+            const user = req.body;
+            console.log('user', user, 'email', email)
+            const filter = { email: email };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: user
+            }
+            const result = await userCollection.updateOne(filter, updatedDoc, options);
+            const token = jwt.sign({ email: email }, process.env.Access_Token_Secret, { expiresIn: '1m' })
+            res.send({ result, token });
+        })
 
         //services apis
         app.get('/items', async (req, res) => {
